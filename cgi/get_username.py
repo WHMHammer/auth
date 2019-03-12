@@ -1,25 +1,22 @@
 #!/usr/bin/python3
 import whl    # a customized script
-from time import time
-from urllib.parse import unquote
+from json import dumps
 
-import traceback
-
-def verify():
+def get_username():
     print("Content-Type: application/json")
     
-    whl.check_request_method("GET")
+    whl.check_request_method("POST")
+    
     form=whl.get_form()
     
     try:
-        username=unquote(form["username"])
-        response=form["response"]
+        email=form["email"]
     except KeyError:
         print("Status: 400")
         print()
         exit()
     
-    if len(username)>whl.USERNAMEMAXLENGTH or len(response)!=whl.CHALLENGELENGTH:
+    if len(email)>whl.EMAILMAXLENGTH:
         print("Status: 400")
         print()
         exit()
@@ -27,33 +24,27 @@ def verify():
     conn=whl.sql.connect(whl.DBHOST,whl.DBUSER,whl.DBPASSWORD,whl.DBNAME)
     cur=conn.cursor()
     
-    cur.execute("select status,challenge from users where username=%s;",(username,))
+    cur.execute("select username from users where email=%s and status=%s;",(email,"verified"))
     try:
-        status,challenge=cur.fetchone()
+        username=cur.fetchone()[0]
     except TypeError:
         conn.close()
         print("Status: 404")
         print()
         exit()
     
-    if status!="unverified" or response!=challenge:
-        conn.close()
-        print("Status: 403")
-        print()
-        exit()
-    
-    cur.execute("update users set status=%s,last_login_time=%s,challenge=%s where username=%s;",("verified",int(time()),whl.rand32(),username))
-    
-    conn.commit()
     conn.close()
     
     print()
+    print(dumps({
+        "username":username
+    }))
 
 if __name__=="__main__":
-    #verify()
+    #get_username()
     #"""
     try:
-        verify()
+        get_username()
     except Exception as e:
         print("Status: 500")
         print()

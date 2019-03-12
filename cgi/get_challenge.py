@@ -1,59 +1,56 @@
 #!/usr/bin/python3
 import whl    # a customized script
 from json import dumps
-from time import time
 
-def login():
+def get_challenge():
     print("Content-Type: application/json")
     
     whl.check_request_method("POST")
+    
     form=whl.get_form()
     
     try:
         username=form["username"]
-        response=form["response"]
     except KeyError:
         print("Status: 400")
         print()
         exit()
     
-    if len(username)>whl.USERNAMEMAXLENGTH or len(response)!=whl.PASSWORDHASHLENGTH:
+    if len(username)>whl.USERNAMEMAXLENGTH:
         print("Status: 400")
         print()
         exit()
     
-    conn=sql.connect(whl.DBHOST,whl.DBUSER,whl.DBPASSWORD,whl.DBNAME)
+    conn=whl.sql.connect(whl.DBHOST,whl.DBUSER,whl.DBPASSWORD,whl.DBNAME)
     cur=conn.cursor()
     
-    cur.execute("select password_hash,challenge from users where username=%s and status=%s;",(username,"verified"))
+    cur.execute("select salt from users where username=%s and status=%s;",(username,"verified"))
     try:
-        password_hash,challenge=cur.fetchone()
+        salt=cur.fetchone()[0]
     except TypeError:
         conn.close()
         print("Status: 404")
         print()
         exit()
     
-    if response!=whl.hash_r(challenge,password_hash):
-        conn.close()
-        print("Status: 403")
-        print()
-        exit()
+    challenge=whl.rand32()
     
-    cur.execute("update users set last_login_time=%s,challenge=%s where username=%s;",(int(time()),whl.rand32(),username))
+    cur.execute("update users set challenge=%s where username=%s;",(challenge,username))
     
     conn.commit()
     conn.close()
     
-    #Add cookie
-    
     print()
+    print(dumps({
+        "salt":salt,
+        "challenge":challenge
+    }))
 
 if __name__=="__main__":
-    #login()
+    #get_challenge()
     #"""
     try:
-        login()
+        get_challenge()
     except Exception as e:
         print("Status: 500")
         print()
