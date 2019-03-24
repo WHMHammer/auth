@@ -3,6 +3,7 @@ import whl    # a customized script
 from json import dumps
 from time import time
 
+@whl.debug
 def login():
     print("Content-Type: application/json")
     
@@ -15,11 +16,13 @@ def login():
     except KeyError:
         print("Status: 400")
         print()
+        print("{}")
         exit()
     
     if len(username)>whl.USERNAMEMAXLENGTH or len(response)!=whl.PASSWORDHASHLENGTH:
         print("Status: 400")
         print()
+        print("{}")
         exit()
     
     conn=sql.connect(whl.DBHOST,whl.DBUSER,whl.DBPASSWORD,whl.DBNAME)
@@ -32,15 +35,17 @@ def login():
         conn.close()
         print("Status: 404")
         print()
+        print("{}")
         exit()
     
     if response!=whl.hash_r(challenge,password_hash):
         conn.close()
         print("Status: 403")
         print()
+        print("{}")
         exit()
     
-    cur.execute("update users set last_login_time=%s,challenge=%s where username=%s;",(int(time()),whl.rand32(),username))
+    cur.execute("update users set last_login_time=%s,challenge=%s where username=%s;",(int(time()),whl.generate_salt(),username))
     
     conn.commit()
     conn.close()
@@ -48,16 +53,7 @@ def login():
     #Add cookie
     
     print()
+    print("{}")
 
 if __name__=="__main__":
-    #login()
-    #"""
-    try:
-        login()
-    except Exception as e:
-        print("Status: 500")
-        print()
-        print(dumps({
-            "err_msg":traceback.format_tb(e.__traceback__)
-        }))
-    #"""
+    login()

@@ -1,63 +1,68 @@
 #!/usr/bin/python3
 import whl    # a customized script
+from json import dumps
 from time import time
-from urllib.parse import unquote
 
 import traceback
 
+@whl.debug
 def verify():
     print("Content-Type: application/json")
     
-    whl.check_request_method("GET")
+    whl.check_request_method("POST")
     form=whl.get_form()
     
     try:
-        username=unquote(form["username"])
+        username=form["username"]
         response=form["response"]
+        email=form["email"]
     except KeyError:
         print("Status: 400")
         print()
-        exit()
+        print("{}")
+        return
     
-    if len(username)>whl.USERNAMEMAXLENGTH or len(response)!=whl.CHALLENGELENGTH:
+    if (
+        len(username)>whl.USERNAMEMAXLENGTH or
+        len(response)!=whl.PASSWORDHASHLENGTH or
+        len(email)>whl.EMAILMAXLENGTH
+    ):
         print("Status: 400")
         print()
-        exit()
+        print("{}")
+        return
     
-    conn=whl.sql.connect(whl.DBHOST,whl.DBUSER,whl.DBPASSWORD,whl.DBNAME)
+    conn=whl.connectDB()
     cur=conn.cursor()
     
-    cur.execute("select status,challenge from users where username=%s;",(username,))
+    cur.execute("select password_hash,challenge from users where username=%s and email=%s and status=%s;",(username,email,"unverified"))
     try:
-        status,challenge=cur.fetchone()
+        password_hash,challenge=cur.fetchone()
     except TypeError:
-        conn.close()
-        print("Status: 404")
-        print()
-        exit()
-    
-    if status!="unverified" or response!=challenge:
         conn.close()
         print("Status: 403")
         print()
-        exit()
+        print("{}")
+        return
     
-    cur.execute("update users set status=%s,last_login_time=%s,challenge=%s where username=%s;",("verified",int(time()),whl.rand32(),username))
+    if response!=whl.hash_r(challenge,password_hash):
+        conn.close()
+        print("Status: 403")
+        print()
+        print("{}")
+        return
+    
+    cur.execute("update users set status=%s,last_login_time=%s,challenge=%s where username=%s;",("verified",int(time()),whl.generate_salt(),username))
     
     conn.commit()
     conn.close()
     
+    whl.send_email(whl.NOREPLY,email,"Your registration at %s is verified"%whl.PROJECTNAME,"<p>Dear %s:</p><br/><p>Your registration at %s is verified. Have fun!</p><br/><p>Best rgards,</p><p>%s</p>"%(username,whl.PROJECTNAME,whl.PROJECTNAME))
+    
+    #Add cookie
+    
     print()
+    print("{}")
 
 if __name__=="__main__":
-    #verify()
-    #"""
-    try:
-        verify()
-    except Exception as e:
-        print("Status: 500")
-        print()
-        print(dumps({
-            "err_msg":traceback.format_tb(e.__traceback__)
-        }))
-    #"""
+    verify()
