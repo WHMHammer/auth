@@ -2,28 +2,28 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Register</title>
+        <title>Verify</title>
         <link rel="stylesheet" type="text/css" href="css/auth.css">
     </head>
     <body>
-        <h1 id="title">Register</h1>
+        <h1 id="title">Verify</h1>
         <div id="form">
             <input id="username" required="true" placeholder="Username"/>
             <p id="username_warning" class="warning"></p>
             <input id="password" type="password" placeholder="Password"/>
             <p id="password_warning" class="warning"></p>
-            <input id="retype_password" type="password" placeholder="Retype password"/>
-            <p id="retype_password_warning" class="warning"></p>
+            <input id="verification_code_input" placeholder="Verification code"/>
+            <p id="verification_code_warning" class="warning"></p>
             <input id="email" placeholder="Email address"/>
             <p id="email_warning" class="warning"></p>
-            <button id="submit">Register</button>
+            <button id="submit">Verify</button>
         </div>
         <div id="success">
-            <p class="success">You have been successfully registered!</p>
-            <p class="success">Please check your email box to <a href="verify.html">verify</a> your registration.</p>
+            <p class="success">You registration has been successfully verified!</p>
+            <p class="success"><a href="/">Home page</a></p>
         </div>
         <script src="js/jsSHA-2.3.1/src/sha.js"></script>
         <script src="js/auth.js"></script>
-        <script src="js/register.js"></script>
+        <script src="js/verify.js"></script>
     </body>
 </html>
