@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+        <link rel="stylesheet" type="text/css" href="css/auth.css">
+    </head>
+    <body>
+        <h1 id="title">Login</h1>
+        <div id="form">
+            <input id="username" required="true" placeholder="Username"/>
+            <p id="username_warning" class="warning"></p>
+            <input id="password" type="password" placeholder="Password"/>
+            <p id="password_warning" class="warning"></p>
+            <button id="submit">Login</button>
+            <p id="forgot_username" class="hint"><a href="get_username.html">Forgot username?</a></p>
+            <p id="forgot_password" class="hint"><a href="forgot_password.html">Forgot password?</a></p>
+        </div>
+        <div id="success">
+            <p class="success">You are now logged in.</p>
+            <p class="success"><a href="/">Home page</a></p>
+        </div>
+        <script src="js/jsSHA-2.3.1/src/sha.js"></script>
+        <script src="js/auth.js"></script>
+        <script src="js/login.js"></script>
+    </body>
+</html>
