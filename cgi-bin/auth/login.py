@@ -25,7 +25,7 @@ def login():
         print("{}")
         exit()
     
-    conn=sql.connect(whl.DBHOST,whl.DBUSER,whl.DBPASSWORD,whl.DBNAME)
+    conn=whl.connectDB()
     cur=conn.cursor()
     
     cur.execute("select password_hash,challenge from users where username=%s and status=%s;",(username,"verified"))

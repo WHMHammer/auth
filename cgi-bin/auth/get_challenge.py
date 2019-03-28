@@ -7,7 +7,6 @@ def get_challenge():
     print("Content-Type: application/json")
     
     whl.check_request_method("POST")
-    
     form=whl.get_form()
     
     try:

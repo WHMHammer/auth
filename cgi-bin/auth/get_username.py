@@ -7,7 +7,6 @@ def get_username():
     print("Content-Type: application/json")
     
     whl.check_request_method("POST")
-    
     form=whl.get_form()
     
     try:
@@ -24,7 +23,7 @@ def get_username():
         print("{}")
         exit()
     
-    conn=whl.sql.connect(whl.DBHOST,whl.DBUSER,whl.DBPASSWORD,whl.DBNAME)
+    conn=whl.connectDB()
     cur=conn.cursor()
     
     cur.execute("select username from users where email=%s and status=%s;",(email,"verified"))
