@@ -42,3 +42,8 @@ input{
 .success{
     text-align: center;
 }
+
+.hint{
+    margin: auto;
+    text-align: center;
+}
