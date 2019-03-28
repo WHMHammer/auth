@@ -21,20 +21,20 @@ submit.onclick=function () {
         alert("Please correct the mistakes first");
     }
     else {
-        var challenge=verification_code_input.value.slice(0,16);
-        var salt=verification_code_input.value.slice(16);
-        var h=new jsSHA("SHA3-512","TEXT");
+        let challenge=verification_code_input.value.slice(0,16);
+        let salt=verification_code_input.value.slice(16);
+        let h=new jsSHA("SHA3-512","TEXT");
         h.update(salt+password_input.value);
-        var salt_password=h.getHash("HEX");
+        let salt_password=h.getHash("HEX");
         h=new jsSHA("SHA3-512","TEXT");
         h.update(challenge+salt_password);
         
-        var rq=new XMLHttpRequest();
+        let rq=new XMLHttpRequest();
         rq.onreadystatechange=function () {
             if (this.readyState==4) {
                 if (this.status==200) {
-                    var form=document.getElementById("form")
-                    var success=document.getElementById("success");
+                    let form=document.getElementById("form")
+                    let success=document.getElementById("success");
                     form.style.display="none";
                     success.style.display="block";
                 }

@@ -22,22 +22,22 @@ submit.onclick=function () {
     }
     else {
         if (confirm("Are you sure to register with these information?")) {
-            var alnum="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
-            var salt="";
-            var rand;
+            let alnum="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+            let salt="";
+            let rand;
             for (let i=0;i<16;i++) {
                 rand=Math.floor(Math.random()*62);
                 salt+=alnum.slice(rand,rand+1);
             }
-            var h=new jsSHA("SHA3-512","TEXT");
+            let h=new jsSHA("SHA3-512","TEXT");
             h.update(salt+password_input.value);
             
-            var rq=new XMLHttpRequest();
+            let rq=new XMLHttpRequest();
             rq.onreadystatechange=function () {
                 if (this.readyState==4) {
                     if (this.status==200) {
-                        var form=document.getElementById("form")
-                        var success=document.getElementById("success");
+                        let form=document.getElementById("form")
+                        let success=document.getElementById("success");
                         form.style.display="none";
                         success.style.display="block";
                     }
