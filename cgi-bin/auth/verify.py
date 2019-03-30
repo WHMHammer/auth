@@ -32,10 +32,18 @@ def verify():
         print("{}")
         return
     
+    try:
+        bytes(email,"ascii")
+    except UnicodeEncodeError:
+        print("Status: 400")
+        print()
+        print("{}")
+        return
+    
     conn=whl.connectDB()
     cur=conn.cursor()
     
-    cur.execute("select password_hash,challenge from users where username=%s and email=%s and status=%s;",(username,email,"unverified"))
+    cur.execute("select password_hash,challenge from users where username=%s and email=%s and status=%s limit 1;",(username,email,"unverified"))
     try:
         password_hash,challenge=cur.fetchone()
     except TypeError:
@@ -59,7 +67,7 @@ def verify():
     
     whl.send_email(whl.NOREPLY,email,"Your registration at %s is verified"%whl.PROJECTNAME,"<p>Dear %s:</p><br/><p>Your registration at %s is verified. Have fun!</p><br/><p>Best rgards,</p><p>%s</p>"%(username,whl.PROJECTNAME,whl.PROJECTNAME))
     
-    #Add cookie
+    whl.add_auth_cookie(username)
     
     print()
     print("{}")

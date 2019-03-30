@@ -11,23 +11,27 @@ from random import choice
 from sys import stdin
 
 # project information:
-PROJECTNAME=""
-DOMAIN=""
-DEVELOPEREMAIL=""
+PROJECTNAME="Your Project name"    # change this
+DOMAIN="your.domain"    # change this
+DEVELOPEREMAIL="developer@email.address"    # change this
 
 # database:
-def connectDB():
-    return sql.connect(
-        user="",
-        password="",
-        host="",
-        database=""
-    )
+DBUSER="database_username"    # change this
+DBPASSWORD="database_password"    # change this
+DBNAME="database_name"    # change this
 
 USERNAMEMAXLENGTH=64
 SALTLENGTH=16
 PASSWORDHASHLENGTH=128
 EMAILMAXLENGTH=64
+
+def connectDB():
+    return sql.connect(
+        user=DBUSER,
+        password=DBPASSWORD,
+        host="localhost",
+        database=DBNAME
+    )
 
 # email
 def send_email(sender,to,subject,body):
@@ -40,10 +44,10 @@ def send_email(sender,to,subject,body):
         conn.sendmail(sender.get("address"),to,bytes("Sender: %s\nTo: %s\nSubject: %s\nContent-Type: text/html\n\n%s"%(sender.get("address"),to,subject,body),"utf8"))
 
 NOREPLY={
-    "smtp_server":"",
-    "port":-1,
-    "address":"",
-    "token":""
+    "smtp_server":"smtp.server",    # change this
+    "port":-1,    # change this
+    "address":"noreply@email.address",    # change this
+    "token":"email_password_or_token"    # change this
 }
 
 # get request information
@@ -73,9 +77,9 @@ def get_form_x_www_form_urlencoded():
 
 def get_request_body():
     content_length=int(environ.get("CONTENT_LENGTH"))
-    # Don't replace the code below with this for it may cause UnicodeEncodeError elsewhere:
-    #     return stdin.read(content_length)
     return stdin.read(content_length).encode("utf8","surrogateescape").decode("utf8")
+    # Don't replace the code above with the following line or UnicodeEncodeError may occur elsewhere:
+    #     return stdin.read(content_length)
 
 # hash
 def rand_str(length):
@@ -91,8 +95,8 @@ def generate_salt():
 def hash_r(*args):
     # hash recursively
     # e.g.
-    #  hash_r(challenge,salt,secret)
-    # =hash(challenge+hash(salt+secret))
+    #   hash_r(challenge,salt,secret)
+    # = hash(challenge+hash(salt+secret))
     s=args[-1]
     for i in range(len(args)-2,-1,-1):
         b=(args[i]+s).encode("utf8")
@@ -114,3 +118,7 @@ def debug(func):
             err_msg+="<p>%s</p>"%repr(e)
             send_email(NOREPLY,DEVELOPEREMAIL,"An unexpected error occured at %s"%PROJECTNAME,err_msg)
     return foo
+
+def add_auth_cookie(username):
+    # needs implementing
+    pass

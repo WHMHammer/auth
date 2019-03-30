@@ -28,7 +28,7 @@ def login():
     conn=whl.connectDB()
     cur=conn.cursor()
     
-    cur.execute("select password_hash,challenge from users where username=%s and status=%s;",(username,"verified"))
+    cur.execute("select password_hash,challenge from users where username=%s and status=%s limit 1;",(username,"verified"))
     try:
         password_hash,challenge=cur.fetchone()
     except TypeError:
@@ -50,7 +50,7 @@ def login():
     conn.commit()
     conn.close()
     
-    #Add cookie
+    whl.add_auth_cookie(username)
     
     print()
     print("{}")

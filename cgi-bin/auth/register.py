@@ -9,6 +9,7 @@ def register():
     
     whl.check_request_method("POST")
     form=whl.get_form()
+    
     try:
         username=form["username"]
         salt=form["salt"]
@@ -45,12 +46,12 @@ def register():
     err=False
     err_msg=[]
     
-    cur.execute("select * from users where email=%s and status!=%s",(email,"unverified"))
+    cur.execute("select * from users where email=%s and status!=%s limit 1;",(email,"unverified"))
     if cur.fetchone() is not None:
         err=True
         err_msg.append("email registered")
     
-    cur.execute("select * from users where username=%s and status!=%s",(username,"unverified"))
+    cur.execute("select * from users where username=%s and status!=%s limit 1;",(username,"unverified"))
     if cur.fetchone() is not None:
         err=True
         err_msg.append("username registered")

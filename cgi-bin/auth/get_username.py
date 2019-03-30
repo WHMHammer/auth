@@ -26,7 +26,7 @@ def get_username():
     conn=whl.connectDB()
     cur=conn.cursor()
     
-    cur.execute("select username from users where email=%s and status=%s;",(email,"verified"))
+    cur.execute("select username from users where email=%s and status=%s limit 1;",(email,"verified"))
     try:
         username=cur.fetchone()[0]
     except TypeError:

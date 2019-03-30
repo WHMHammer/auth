@@ -26,7 +26,7 @@ def get_challenge():
     conn=whl.connectDB()
     cur=conn.cursor()
     
-    cur.execute("select salt from users where username=%s and status=%s;",(username,"verified"))
+    cur.execute("select salt from users where username=%s and status=%s limit 1;",(username,"verified"))
     try:
         salt=cur.fetchone()[0]
     except TypeError:
