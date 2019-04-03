@@ -11,5 +11,6 @@ create table users(
     catagory varchar(32),
     status varchar(32) default 'unverified',
     last_login_time int(10) default 0,
+    session char(16),
     challenge char(16)
 );
