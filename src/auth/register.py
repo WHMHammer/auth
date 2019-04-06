@@ -6,10 +6,10 @@ from .. import auth
 
 @auth.bp.route("/register",methods=("GET","POST"))
 def register():
+    # front-end
     if flask.request.method=="GET":
-        # check session
-        
-        
+        if auth.get_client_session():
+            return flask.redirect("/")
         return flask.render_template(
             "template.html",
             title="Register",
@@ -18,13 +18,14 @@ def register():
         )
     
     
+    # back-end
     elif flask.request.method=="POST":
         form=flask.request.get_json()
         try:
             username=str(form["username"])
             salt=str(form["salt"])
             password_hash=str(form["password_hash"])
-            email=str(form["email"])
+            email=str(form["email"]).lower()
         except (KeyError,TypeError):
             return "{}",400,{"Content-Type":"application/json"}
         
@@ -35,7 +36,6 @@ def register():
             auth.check_email(email)
         ):
             return "{}",400,{"Content-Type":"application/json"}
-        
         
         conn=auth.connectDB()
         cur=conn.cursor()
@@ -57,15 +57,14 @@ def register():
             conn.close()
             return dumps({"err_msg":err_msg}),403,{"Content-Type":"application/json"}
         
-        challenge=auth.generate_salt()
+        session=auth.generate_salt()
         
         cur.execute("delete from users where username=%s or email=%s;",(username,email))
-        cur.execute("insert into users(username,salt,password_hash,email,session,challenge) values(%s,%s,%s,%s,%s,%s);",(username,salt,password_hash,email,auth.generate_salt(),challenge))
-        
+        cur.execute("insert into users(username,salt,password_hash,email,session,challenge) values(%s,%s,%s,%s,%s,%s);",(username,salt,password_hash,email,session,auth.generate_salt()))
         
         try:
             verify_url="https://%s/auth/verify.html"%(auth.DOMAIN)
-            auth.send_email(auth.NOREPLY,email,"Verify your registration at %s"%auth.PROJECTNAME,"<p>Hello, dear %s:</p><p>Your verification code is:</p><p><code>%s</code></p>Please click <a href=\"%s\">here</a> or paste the following url to your web browser to verify your registration:</p><p>%s</p><br/><p>Best regards,</p><p>%s</p>"%(username,challenge+salt,verify_url,verify_url,auth.PROJECTNAME))
+            auth.send_email(auth.NOREPLY,email,"Verify your registration at %s"%auth.PROJECTNAME,"<p>Hello, dear %s:</p><p>Your verification code is:</p><p><code>%s</code></p>Please click <a href=\"%s\">here</a> or paste the following url to your web browser to verify your registration:</p><p>%s</p><br/><p>Best regards,</p><p>%s</p>"%(username,session+salt,verify_url,verify_url,auth.PROJECTNAME))
         except auth.smtplib.SMTPRecipientsRefused:
             conn.close()
             return dumps({"err_msg":["The email address you entered is invalid."]}),403,{"Content-Type":"application/json"}

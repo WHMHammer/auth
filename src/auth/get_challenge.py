@@ -17,7 +17,6 @@ def get_challenge():
     ):
         return "{}",400,{"Content-Type":"application/json"}
     
-    
     conn=auth.connectDB()
     cur=conn.cursor()
     
@@ -34,7 +33,6 @@ def get_challenge():
     
     conn.commit()
     conn.close()
-    
     
     return dumps({
         "salt":salt,

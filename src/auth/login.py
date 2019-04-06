@@ -1,5 +1,4 @@
 import flask
-from simplejson import dumps
 from time import time
 
 from .. import auth
@@ -7,10 +6,10 @@ from .. import auth
 
 @auth.bp.route("/login",methods=("GET","POST"))
 def login():
+    # front-end
     if flask.request.method=="GET":
-        # check session
-        
-        
+        if auth.get_client_session():
+            return flask.redirect("/")
         return flask.render_template(
             "template.html",
             title="Login",
@@ -19,6 +18,7 @@ def login():
         )
     
     
+    # back-end
     elif flask.request.method=="POST":
         form=flask.request.get_json()
         try:
@@ -32,7 +32,6 @@ def login():
             auth.check_response(response)
         ):
             return "{}",400,{"Content-Type":"application/json"}
-        
         
         conn=auth.connectDB()
         cur=conn.cursor()
@@ -52,8 +51,6 @@ def login():
         conn.commit()
         conn.close()
         
-        
-        # session
-        
+        auth.set_client_session(username)
         
         return "{}",{"Content-Type":"application/json"}

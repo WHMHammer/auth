@@ -1,15 +1,14 @@
 import flask
-from simplejson import dumps
 
 from .. import auth
 
 
 @auth.bp.route("/get_username",methods=("GET","POST"))
 def get_username():
+    # front-end
     if flask.request.method=="GET":
-        # check session
-        
-        
+        if auth.get_client_session():
+            return flask.redirect("/")
         return flask.render_template(
             "template.html",
             title="Forgot username",
@@ -18,10 +17,11 @@ def get_username():
         )
     
     
+    # back-end
     elif flask.request.method=="POST":
         form=flask.request.get_json()
         try:
-            email=str(form["email"])
+            email=str(form["email"]).lower()
         except (KeyError,TypeError):
             return "{}",400,{"Content-Type":"application/json"}
         
@@ -29,7 +29,6 @@ def get_username():
             auth.check_email(email)
         ):
             return "{}",400,{"Content-Type":"application/json"}
-        
         
         conn=auth.connectDB()
         cur=conn.cursor()

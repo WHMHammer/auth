@@ -75,7 +75,7 @@ verification_code_input.onblur=function () {
         verification_code_err=false;
         verification_code_warning.style.display="none";
     }
-}
+};
 
 var email_input=document.getElementById("email_input");
 var email_warning=document.getElementById("email_warning");

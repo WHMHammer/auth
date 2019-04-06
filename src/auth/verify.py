@@ -1,5 +1,4 @@
 import flask
-from simplejson import dumps
 from time import time
 
 from .. import auth
@@ -7,10 +6,10 @@ from .. import auth
 
 @auth.bp.route("/verify",methods=("GET","POST"))
 def verify():
+    # front-end
     if flask.request.method=="GET":
-        # check session
-        
-        
+        if auth.get_client_session():
+            return flask.redirect("/")
         return flask.render_template(
             "template.html",
             title="Verify",
@@ -19,12 +18,13 @@ def verify():
         )
     
     
+    # back-end
     elif flask.request.method=="POST":
         form=flask.request.get_json()
         try:
             username=str(form["username"])
             response=str(form["response"])
-            email=str(form["email"])
+            email=str(form["email"]).lower()
         except (KeyError,TypeError):
             return "{}",400,{"Content-Type":"application/json"}
         
@@ -35,31 +35,29 @@ def verify():
         ):
             return "{}",400,{"Content-Type":"application/json"}
         
-        
         conn=auth.connectDB()
         cur=conn.cursor()
         
-        cur.execute("select password_hash,challenge from users where username=%s and email=%s and status=%s limit 1;",(username,email,"unverified"))
+        cur.execute("select password_hash,session from users where username=%s and email=%s and status=%s limit 1;",(username,email,"unverified"))
         try:
-            password_hash,challenge=cur.fetchone()
+            password_hash,session=cur.fetchone()
         except TypeError:
             conn.close()
             return "{}",403,{"Content-Type":"application/json"}
         
-        if response!=auth.hash_r(challenge,password_hash):
+        if response!=auth.hash_r(session,password_hash):
             conn.close()
             return "{}",403,{"Content-Type":"application/json"}
         
-        cur.execute("update users set status=%s,last_login_time=%s,challenge=%s where username=%s;",("verified",int(time()),auth.generate_salt(),username))
+        session=auth.generate_salt()
+        
+        cur.execute("update users set status=%s,last_login_time=%s,session=%s where username=%s;",("verified",int(time()),session,username))
         
         conn.commit()
         conn.close()
         
-        
         auth.send_email(auth.NOREPLY,email,"Your registration at %s is verified"%auth.PROJECTNAME,"<p>Dear %s:</p><br/><p>Your registration at %s is verified. Have fun!</p><br/><p>Best rgards,</p><p>%s</p>"%(username,auth.PROJECTNAME,auth.PROJECTNAME))
         
-        
-        # session
-        
+        auth.set_client_session(username)
         
         return "{}",{"Content-Type":"application/json"}

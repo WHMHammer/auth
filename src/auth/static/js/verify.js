@@ -17,7 +17,7 @@ submit.onclick=function () {
         rq.onreadystatechange=function () {
             if (this.readyState==4) {
                 if (this.status==200) {
-                    window.location.replace("/")
+                    window.location.replace("/");
                 }
                 else if (this.status==403) {
                     alert("Verification failed, try again.");

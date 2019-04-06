@@ -17,20 +17,23 @@ from . import register
 from . import verify
 from . import get_challenge
 from . import login
+from . import request_password
+from . import reset_password
+from . import logout
 from . import get_username
 
 
 # project information:
-PROJECTNAME="project name"
-DOMAIN="project.domain"
-DEVELOPEREMAIL="developer@email.address"
+PROJECTNAME=""
+DOMAIN=""
+DEVELOPEREMAIL=""
 
 
 # database:
-DBUSER="db_user"
-DBPASSWORD="db_password"
-DBHOST="db_host"
-DBNAME="db_name"
+DBUSER=""
+DBPASSWORD=""
+DBHOST=""
+DBNAME=""
 
 USERNAMEMAXLENGTH=64
 SALTLENGTH=16
@@ -57,10 +60,10 @@ def send_email(sender,to,subject,body):
         conn.sendmail(sender.get("address"),to,bytes("Sender: %s\nTo: %s\nSubject: %s\nContent-Type: text/html\n\n%s"%(sender.get("address"),to,subject,body),"utf8"))
 
 NOREPLY={
-    "smtp_server":"smtp.server",
-    "port":-1,
-    "address":"noreply@email.address",
-    "token":"token_or_password"
+    "smtp_server":"",
+    "port":0,
+    "address":"",
+    "token":""
 }
 
 
@@ -103,3 +106,38 @@ def hash_r(*args):
         h=hash_method(b)
         s=h.hexdigest()
     return s
+
+# session
+def set_client_session(username):
+    conn=connectDB()
+    cur=conn.cursor()
+    
+    cur.execute("select id from users where username=%s limit 1;",(username,))
+    user_id=cur.fetchone()[0]
+    
+    session=generate_salt()
+    cur.execute("update users set session=%s where username=%s;",(session,username))
+    
+    conn.commit()
+    conn.close()
+    
+    flask.session["user_id"]=user_id
+    flask.session["session"]=session
+
+def get_client_session():
+    user_id=flask.session.get("user_id")
+    session=flask.session.get("session")
+    if user_id is None or session is None:
+        return False
+    
+    conn=connectDB()
+    cur=conn.cursor()
+    
+    cur.execute("select * from users where id=%s and status=%s and session=%s limit 1;",(user_id,"verified",session))
+    
+    if cur.fetchone() is not None:
+        conn.close()
+        return True
+    
+    conn.close()
+    return False
