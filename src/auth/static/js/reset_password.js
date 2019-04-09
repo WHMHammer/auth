@@ -1,25 +1,22 @@
-verification_code_input.onblur=function () {
+function check_verification_code() {
     if (verification_code_input.value=="") {
-        verification_code_err=true;
         verification_code_warning.innerHTML="Verification code is required";
         verification_code_warning.style.display="block";
+        return false;
     }
     else if (verification_code_input.value.length!=16) {
-        verification_code_err=true;
         verification_code_warning.innerHTML="Verification code not in correct format";
         verification_code_warning.style.display="block";
+        return false;
     }
     else {
-        verification_code_err=false;
         verification_code_warning.style.display="none";
+        return true;
     }
-};
+}
 
 submit.onclick=function () {
-    if (username_err || password_err || retype_password_err || verification_code_err || email_err) {
-        alert("Please correct the mistakes first");
-    }
-    else {
+    if (check_username() && check_password() && check_retype_password() && check_verification_code() && check_email()) {
         if (confirm("Are you sure to reset your password with these information?")) {
             let alnum="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
             let salt="";
@@ -35,6 +32,7 @@ submit.onclick=function () {
             rq.onreadystatechange=function () {
                 if (this.readyState==4) {
                     if (this.status==200) {
+                        save_login(JSON.parse(this.responseText));
                         window.location.replace("/auth/verify");
                     }
                     else if (this.status==403) {

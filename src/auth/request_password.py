@@ -7,10 +7,10 @@ from .. import auth
 def request_password():
     # front-end
     if flask.request.method=="GET":
-        if auth.get_client_session():
+        if auth.check_client_session():
             return flask.redirect("/")
         return flask.render_template(
-            "template.html",
+            "auth.html",
             title="Request password",
             action_name="request",
             ctrl_script_src="request_password.js"

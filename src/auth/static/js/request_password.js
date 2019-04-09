@@ -4,10 +4,7 @@ retype_password_input.style.display="none";
 verification_code_input.style.display="none";
 
 submit.onclick=function () {
-    if (email_err) {
-        alert("Please correct the mistakes first");
-    }
-    else {
+    if (check_email()) {
         let rq=new XMLHttpRequest();
         rq.onreadystatechange=function () {
             if (this.readyState==4) {

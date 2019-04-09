@@ -1,10 +1,7 @@
 verification_code_input.style.display="none";
 
 submit.onclick=function () {
-    if (username_err || password_err || retype_password_err || email_err) {
-        alert("Please correct the mistakes first");
-    }
-    else {
+    if (check_username() && check_password() && check_retype_password() && check_email()) {
         if (confirm("Are you sure to register with these information?")) {
             let alnum="1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
             let salt="";

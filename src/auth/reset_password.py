@@ -7,10 +7,10 @@ from .. import auth
 def reset_password():
     # front-end
     if flask.request.method=="GET":
-        if auth.get_client_session():
+        if auth.check_client_session():
             return flask.redirect("/")
         return flask.render_template(
-            "template.html",
+            "auth.html",
             title="Reset password",
             action_name="reset",
             ctrl_script_src="reset_password.js"
@@ -47,9 +47,9 @@ def reset_password():
             conn.commit()
             
             auth.send_email(auth.NOREPLY,email,"You have successfully changed your password!","<p>Hello, dear %s:</p><p>You have successfully changed your password!</p><br/><p>Best regards,</p><p>%s</p>"%(username,auth.PROJECTNAME))
+            
+            auth.set_client_session(username)
         
         conn.close()
         
-        auth.set_client_session(username)
-        
-        return "{}",{"Content-Type":"application/json"}
+        return auth.login_info(),{"Content-Type":"application/json"}

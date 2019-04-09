@@ -8,10 +8,10 @@ from .. import auth
 def login():
     # front-end
     if flask.request.method=="GET":
-        if auth.get_client_session():
+        if auth.check_client_session():
             return flask.redirect("/")
         return flask.render_template(
-            "template.html",
+            "auth.html",
             title="Login",
             action_name="login",
             ctrl_script_src="login.js"
@@ -53,4 +53,4 @@ def login():
         
         auth.set_client_session(username)
         
-        return "{}",{"Content-Type":"application/json"}
+        return auth.login_info(),{"Content-Type":"application/json"}

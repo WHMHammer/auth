@@ -8,10 +8,10 @@ from .. import auth
 def verify():
     # front-end
     if flask.request.method=="GET":
-        if auth.get_client_session():
+        if auth.check_client_session():
             return flask.redirect("/")
         return flask.render_template(
-            "template.html",
+            "auth.html",
             title="Verify",
             action_name="verify",
             ctrl_script_src="verify.js"
@@ -60,4 +60,4 @@ def verify():
         
         auth.set_client_session(username)
         
-        return "{}",{"Content-Type":"application/json"}
+        return auth.login_info(),{"Content-Type":"application/json"}

@@ -17,10 +17,7 @@ form.appendChild(forgot_username);
 form.appendChild(forgot_password);
 
 submit.onclick=function () {
-    if (username_err || password_err) {
-        alert("Please correct the mistakes first");
-    }
-    else {
+    if (check_username() && check_password()) {
         let rq=new XMLHttpRequest();
         rq.onreadystatechange=function () {
             if (this.readyState==4) {
@@ -54,6 +51,7 @@ function login(rp) {
     rq.onreadystatechange=function () {
         if (this.readyState==4) {
             if (this.status==200) {
+                save_login(JSON.parse(this.responseText));
                 window.location.replace("/");
             }
             else if (this.status==403) {

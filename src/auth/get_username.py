@@ -7,10 +7,10 @@ from .. import auth
 def get_username():
     # front-end
     if flask.request.method=="GET":
-        if auth.get_client_session():
+        if auth.check_client_session():
             return flask.redirect("/")
         return flask.render_template(
-            "template.html",
+            "auth.html",
             title="Forgot username",
             action_name="submit",
             ctrl_script_src="get_username.js"

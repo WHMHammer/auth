@@ -8,10 +8,10 @@ from .. import auth
 def register():
     # front-end
     if flask.request.method=="GET":
-        if auth.get_client_session():
+        if auth.check_client_session():
             return flask.redirect("/")
         return flask.render_template(
-            "template.html",
+            "auth.html",
             title="Register",
             action_name="register",
             ctrl_script_src="register.js"
@@ -51,7 +51,7 @@ def register():
         cur.execute("select * from users where username=%s and status!=%s limit 1;",(username,"unverified"))
         if cur.fetchone() is not None:
             err=True
-            err_msg.append("The username address you entered has already been used.")
+            err_msg.append("The username you entered has already been used.")
         
         if err:
             conn.close()

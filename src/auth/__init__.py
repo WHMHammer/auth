@@ -3,9 +3,17 @@ import smtplib
 import mysql.connector as sql
 from hashlib import sha3_512 as hash_method
 from random import choice
+from simplejson import dumps
 
 
-bp=flask.Blueprint("auth",__name__,url_prefix="/auth",template_folder="html",static_folder="static")
+bp=flask.Blueprint(
+    "auth",
+    __name__,
+    url_prefix="/auth",
+    template_folder="templates",
+    static_folder="static",
+    static_url_path=""
+)
 
 @bp.route("/",methods=("GET",))
 def auth():
@@ -17,10 +25,11 @@ from . import register
 from . import verify
 from . import get_challenge
 from . import login
+from . import get_username
 from . import request_password
 from . import reset_password
 from . import logout
-from . import get_username
+from . import profile
 
 
 # project information:
@@ -107,7 +116,7 @@ def hash_r(*args):
         s=h.hexdigest()
     return s
 
-# session
+# user info
 def set_client_session(username):
     conn=connectDB()
     cur=conn.cursor()
@@ -124,7 +133,7 @@ def set_client_session(username):
     flask.session["user_id"]=user_id
     flask.session["session"]=session
 
-def get_client_session():
+def check_client_session():
     user_id=flask.session.get("user_id")
     session=flask.session.get("session")
     if user_id is None or session is None:
@@ -141,3 +150,9 @@ def get_client_session():
     
     conn.close()
     return False
+
+def login_info():
+    form=flask.request.get_json()
+    return dumps({
+        "username":str(form.get("username"))
+    })

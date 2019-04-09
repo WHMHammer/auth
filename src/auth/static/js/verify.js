@@ -1,10 +1,7 @@
 retype_password_input.style.display="none";
 
 submit.onclick=function () {
-    if (username_err || password_err || verification_code_err || email_err) {
-        alert("Please correct the mistakes first");
-    }
-    else {
+    if (check_username() && check_password() && check_verification_code() && check_email()) {
         let challenge=verification_code_input.value.slice(0,16);
         let salt=verification_code_input.value.slice(16);
         let h=new jsSHA("SHA3-512","TEXT");
@@ -17,6 +14,7 @@ submit.onclick=function () {
         rq.onreadystatechange=function () {
             if (this.readyState==4) {
                 if (this.status==200) {
+                    save_login(JSON.parse(this.responseText));
                     window.location.replace("/");
                 }
                 else if (this.status==403) {
