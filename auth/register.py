@@ -1,7 +1,7 @@
 import flask
 from simplejson import dumps
 
-from .. import auth
+import auth
 
 
 @auth.bp.route("/register",methods=("GET","POST"))

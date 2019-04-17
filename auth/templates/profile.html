@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Profile</title>
+        <link rel="stylesheet" type="text/css" href="css/profile.css">
+    </head>
+    <body>
+        <div id="header">
+            <div id="logout">
+                <p><a href='auth/logout'>Logout</a></p>
+            </div>
+        </div>
+        <img id="avatar" src="{{ avatar_src }}">
+        <div id="username"><p>{{ username }}</p></div>
+        <div id="email"><p>{{ email }}</p></div>
+        <script src="js/profile.js"></script>
+    </body>
+</html>

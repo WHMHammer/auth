@@ -1,7 +1,7 @@
 import flask
 from time import time
 
-from .. import auth
+import auth
 
 
 @auth.bp.route("/verify",methods=("GET","POST"))

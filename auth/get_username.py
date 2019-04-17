@@ -1,6 +1,6 @@
 import flask
 
-from .. import auth
+import auth
 
 
 @auth.bp.route("/get_username",methods=("GET","POST"))

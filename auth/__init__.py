@@ -57,7 +57,6 @@ def connectDB():
         database=DBNAME
     )
 
-
 # email
 def send_email(sender,to,subject,body):
     # sender is a dictionary storing email box information
