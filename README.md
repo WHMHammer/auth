@@ -12,20 +12,8 @@ This project is still under construction.
 
 ## Deploy
 
-Change to the project directory, run the following command:
-
-`docker build -t your_image_tag .`
-
-Docker will automatically download other dependencies required.
-
-After building the docker image, run this:
-
-`docker run --name your_instance_name your_image_tag`
-
-You can also add `-d` tag in order to run it in the background.
-
 (to be continued)
 
 ## Documentation
 
-See `/doc` directory.
+(not yet available)
