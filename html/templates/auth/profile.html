@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static' ,filename='auth/css/profile.css') }}">
+{% endblock %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block content %}
+    <h1 id="username"></h1>
+    <small id="update_username">edit</small>
+    <h6 id="email"></h6>
+    <small id="update_email">edit</small>
+{% endblock %}
+
+{% block right %}
+    <img id="avatar"/>
+    <small id="update_avatar">edit</small>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/info.js') }}"></script>
+    <script src="{{ url_for('static', filename='auth/js/profile.js') }}"></script>
+{% endblock %}

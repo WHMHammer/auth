@@ -5,18 +5,20 @@ import auth
 
 @auth.cors("/logout")
 def logout():
-    user_id = auth.check_user_token()
+    user = auth.check_user_token()
 
-    if user_id:
-        conn = auth.connectDB()
-        cur = conn.cursor()
+    if user is None:
+        return "{}"
 
-        cur.execute(
-            "update users set session=%s where id=%s;",
-            (auth.generate_salt(), user_id)
-        )
+    conn = auth.connectDB()
+    cur = conn.cursor()
 
-        conn.commit()
-        conn.close()
+    cur.execute("""
+        DELETE FROM sessions
+        WHERE user_id = %s AND session = %s;
+    """, (user["id"], flask.request.get_json().get("user_token")["session"]))
+
+    conn.commit()
+    conn.close()
 
     return "{}"

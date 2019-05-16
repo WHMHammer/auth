@@ -14,40 +14,52 @@ def reset_password():
         salt = str(form["salt"])
         password_hash = str(form["password_hash"])
     except (KeyError, TypeError):
-        return "{}", 400, {"Content-Type": "application/json"}
+        return "{}", 400
 
     if not(
         auth.check_username(username) and
         auth.check_email(email) and
-        auth.check_salt(response) and
+        len(response) == 32 and
         auth.check_salt(salt) and
         auth.check_response(password_hash)
     ):
-        return "{}", 400, {"Content-Type": "application/json"}
+        return "{}", 400
 
     conn = auth.connectDB()
     cur = conn.cursor()
 
-    cur.execute(
-        "select * from users where username=%s and email=%s and session=%s and status=%s limit 1;",
-        (username, email, response, "verified")
-    )
-    if cur.fetchone() is not None:
-        cur.execute(
-            "update users set salt=%s,password_hash=%s where username=%s;",
-            (salt, password_hash, username)
-        )
-        conn.commit()
+    cur.execute("""
+        SELECT *
+        FROM users
+        WHERE username = %s AND email = %s AND status = %s
+        LIMIT 1;
+    """, (username, email, response))
 
-        auth.send_email(
-            auth.NOREPLY,
-            email,
-            "You have successfully changed your password!",
-            "<p>Hello, dear %s:</p><p>You have successfully changed your password!</p><br/><p>Best regards,</p><p>%s</p>" % (
-                username, auth.PROJECTNAME
-            )
-        )
+    if cur.fetchone() is None:
+        return "{}", 403
 
+    cur.execute("""
+        UPDATE users
+        SET status = %s, salt = %s, password_hash = %s
+        WHERE username=%s;
+    """, ("verified", salt, password_hash, username))
+
+    conn.commit()
     conn.close()
 
-    return dumps({"user_token": auth.generate_user_token(username)})
+    auth.send_email(
+        auth.NOREPLY,
+        email,
+        "You have successfully changed your password!",
+        """
+            <p>Hello, dear %s:</p>
+            <p>You have successfully changed your password!</p>
+            <br/>
+            <p>Best regards,</p>
+            <p>%s</p>
+        """ % (username, auth.PROJECTNAME)
+    )
+
+    return dumps({
+        "user_token": auth.generate_user_token(username)
+    })

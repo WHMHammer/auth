@@ -2,19 +2,10 @@ retype_password_input.style.display="none";
 verification_code_input.style.display="none";
 email_input.style.display="none";
 
-var forgot_username=document.createElement("p");
-forgot_username.innerHTML="<a href='get_username'>forgot username?</a>";
-forgot_username.style.margin="auto";
-forgot_username.style.textAlign="center";
-
-var forgot_password=document.createElement("p");
-forgot_password.innerHTML="<a href='request_password'>forgot password?</a>";
-forgot_password.style.margin="auto";
-forgot_password.style.textAlign="center";
-
-var form=document.getElementById("form");
-form.appendChild(forgot_username);
-form.appendChild(forgot_password);
+document.getElementById("right").innerHTML = ' \
+    <h6><a href="get_username">forgot username?</a></h6> \
+    <h6><a href="request_password">forgot password?</a></h6> \
+';
 
 submit.onclick=function () {
     if (check_username() && check_password()) {

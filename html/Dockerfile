@@ -1,11 +1,11 @@
 FROM python:latest
 
+WORKDIR /app
+
 EXPOSE 80
 
-RUN pip3 install pip setuptools mysql-connector-python blinker simplejson python-dotenv watchdog flask --upgrade
-
-WORKDIR /app
+RUN pip3 install flask
 
 COPY . /app
 
-CMD ["python","__init__.py"]
+CMD ["python3", "__init__.py"]

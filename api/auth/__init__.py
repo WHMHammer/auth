@@ -5,15 +5,15 @@ from functools import wraps
 from hashlib import sha3_512 as hash_method
 from random import choice
 from simplejson import dumps
+from time import time
 
 # blueprint
 bp = flask.Blueprint("auth", __name__, url_prefix="/auth")
 
 # project information:
-PROJECTNAME = ""
-DOMAIN = ""
-DEVELOPEREMAIL = ""
-ALLOWORIGINS = ("",)
+PROJECTNAME = "WHMHammer's website"
+DOMAIN = "www.whmhammer.com"
+DEVELOPEREMAIL = "whmhammer@gmail.com"
 
 
 def cors(url):
@@ -23,7 +23,7 @@ def cors(url):
         def bar():
             if flask.request.method == "OPTIONS":
                 return "{}", {
-                    "Access-Control-Allow-Origin": ",".join(ALLOWORIGINS),
+                    "Access-Control-Allow-Origin": "*",
                     "Access-Control-Allow-Methods": "POST",
                     "Access-Control-Allow-Headers": "Content-Type",
                     "Content-Type": "application/json"
@@ -44,17 +44,22 @@ from . import get_username
 from . import request_password
 from . import reset_password
 from . import logout
+from . import update_username
+from . import update_email
+from . import update_avatar
 
 # database:
-DBUSER = ""
-DBPASSWORD = ""
-DBHOST = ""
-DBNAME = ""
+DBUSER = "Noop!"
+DBPASSWORD = "Not here!"
+DBHOST = "db.whmhammer.com"
+DBNAME = "auth"
 
 USERNAMEMAXLENGTH = 64
 SALTLENGTH = 16
 PASSWORDHASHLENGTH = 128
 EMAILMAXLENGTH = 64
+
+SESSIONEXPIRETIME = 86400   # 86400 seconds == 24 hours
 
 
 def connectDB():
@@ -86,10 +91,10 @@ def send_email(sender, to, subject, body):
         )
 
 NOREPLY = {
-    "smtp_server": "",
-    "port": 0,
-    "address": "",
-    "token": ""
+    "smtp_server": "smtp.gmail.com",
+    "port": 465,
+    "address": "noreply.whmhammer@gmail.com",
+    "token": "No way!"
 }
 
 
@@ -113,10 +118,7 @@ def check_email(email):
 # hash
 def rand_str(length):
     alnum = "01234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
-    r = ""
-    for i in range(length):
-        r += choice(alnum)
-    return r
+    return "".join([choice(alnum) for i in range(length)])
 
 
 def generate_salt():
@@ -144,14 +146,20 @@ def generate_user_token(username):
     conn = connectDB()
     cur = conn.cursor()
 
-    cur.execute("select id,email,avatar from users where username=%s limit 1;", (username,))
+    cur.execute("""
+        SELECT id, email, avatar
+        FROM users
+        WHERE username = %s
+        LIMIT 1;
+    """, (username,))
+
     user_id, email, avatar = cur.fetchone()
 
     session = generate_salt()
-    cur.execute(
-        "update users set session=%s where username=%s;",
-        (session, username)
-    )
+    cur.execute("""
+        INSERT into sessions
+        VALUES(%s,%s,%s);
+    """, (user_id, session, int(time())+SESSIONEXPIRETIME))
 
     conn.commit()
     conn.close()
@@ -173,17 +181,35 @@ def check_user_token():
     except (KeyError, TypeError):
         return None
 
+    if not check_salt(session):
+        return None
+
     conn = connectDB()
     cur = conn.cursor()
 
-    cur.execute(
-        "select * from users where id=%s and status=%s and session=%s limit 1;",
-        (user_id, "verified", session)
-    )
+    cur.execute("""
+        DELETE from sessions
+        WHERE expire_time < %s;
+    """, (int(time()),))
 
-    if cur.fetchone() is not None:
-        conn.close()
-        return user_id
+    conn.commit()
 
-    conn.close()
-    return None
+    cur.execute("""
+        SELECT users.username, users.email, users.role
+        FROM users RIGHT JOIN sessions
+        ON users.id=sessions.user_id
+        WHERE users.id=%s AND users.status=%s AND sessions.session=%s
+        LIMIT 1;
+    """, (user_id, "verified", session))
+
+    try:
+        username, email, role = cur.fetchone()
+    except TypeError:
+        return None
+
+    return {
+        "id": user_id,
+        "username": username,
+        "email": email,
+        "role": role
+    }

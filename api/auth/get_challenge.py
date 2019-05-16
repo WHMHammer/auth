@@ -10,32 +10,36 @@ def get_challenge():
     try:
         username = str(form["username"])
     except (KeyError, TypeError):
-        return "{}", 400, {"Content-Type": "application/json"}
+        return "{}", 400
 
     if not(
         auth.check_username(username)
     ):
-        return "{}", 400, {"Content-Type": "application/json"}
+        return "{}", 400
 
     conn = auth.connectDB()
     cur = conn.cursor()
 
-    cur.execute(
-        "select salt from users where username=%s and status=%s limit 1;",
-        (username, "verified")
-    )
+    cur.execute("""
+        SELECT salt
+        FROM users
+        WHERE username = %s AND status = %s
+        LIMIT 1;
+    """, (username, "verified"))
+
     try:
         salt = cur.fetchone()[0]
     except TypeError:
         conn.close()
-        return "{}", 404, {"Content-Type": "application/json"}
+        return "{}", 404
 
     challenge = auth.generate_salt()
 
-    cur.execute(
-        "update users set challenge=%s where username=%s;",
-        (challenge, username)
-    )
+    cur.execute("""
+        UPDATE users
+        SET challenge = %s
+        WHERE username = %s;
+    """, (challenge, username))
 
     conn.commit()
     conn.close()

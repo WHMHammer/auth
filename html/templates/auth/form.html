@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='auth/css/form.css') }}">
+{% endblock %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    <input id="username_input" class="form-control" placeholder="Username">
+    <small id="username_warning" class="warning"></small>
+    <input id="password_input" class="form-control" type="password" placeholder="Password">
+    <small id="password_warning" class="warning"></small>
+    <input id="retype_password_input" class="form-control" type="password" placeholder="Retype password">
+    <small id="retype_password_warning" class="warning"></small>
+    <input id="verification_code_input" class="form-control" placeholder="Verification code">
+    <small id="verification_code_warning" class="warning"></small>
+    <input id="email_input" class="form-control" placeholder="Email address">
+    <small id="email_warning" class="warning"></small>
+    <button id="submit" class="btn btn-primary">{{ button }}</button>
+{% endblock %}
+
+{% block right %}
+    <h6><a href='login'>Login</a></h6>
+{% endblock %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/info.js') }}"></script>
+    <script src="{{ url_for('static', filename='auth/js/form.js') }}"></script>
+{% endblock %}

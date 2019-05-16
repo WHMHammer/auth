@@ -1,5 +1,3 @@
-var api_domain=""
-
 var username_input=document.getElementById("username_input");
 var username_warning=document.getElementById("username_warning");
 function legal_username(s) {
