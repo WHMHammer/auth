@@ -1,4 +1,4 @@
-document.getElementById("username").innerHTML=user_token["username"];
+document.getElementById("username").innerHTML=`${user_token["username"]}&nbsp&nbsp&nbsp&nbsp<img id="update_username" src="/static/svg/feather/icons/edit.svg" title="Click to update username"/>`;
 document.getElementById("update_username").onclick=function () {
     let val=prompt("Please type in your new username:");
     if (!val) {
@@ -20,7 +20,7 @@ document.getElementById("update_username").onclick=function () {
     }));
 };
 
-document.getElementById("email").innerHTML=user_token["email"];
+document.getElementById("email").innerHTML=`${user_token["email"]}&nbsp&nbsp&nbsp&nbsp<img id="update_email" src="/static/svg/feather/icons/edit.svg" title="Click to update email address"/>`;
 document.getElementById("update_email").onclick=function () {
     let val=prompt("Please type in your new email:");
     if (!val) {
@@ -43,7 +43,7 @@ document.getElementById("update_email").onclick=function () {
 };
 
 document.getElementById("avatar").setAttribute("src",user_token["avatar"]);
-document.getElementById("update_avatar").onclick=function () {
+document.getElementById("avatar").onclick=function () {
     let val=prompt("Please type in the link to your new avatar:");
     if (!val) {
         return;

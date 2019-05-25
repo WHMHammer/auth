@@ -31,7 +31,7 @@ def update_username():
     except auth.sql.IntegrityError:
         conn.close()
         return dumps({
-            "err_msg": ["The email address you entered has already been used."]
+            "err_msg": ["The username you entered has already been used."]
         }), 403
 
     conn.commit()

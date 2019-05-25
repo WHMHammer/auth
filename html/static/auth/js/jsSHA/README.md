@@ -1,6 +1,6 @@
 # jsSHA
 
-(the files under this directory are from [Caligatio](https://github.com/Caligatio)'s [jsSHA](https://github.com/Caligatio/jsSHA), [licence](https://github.com/Caligatio/jsSHA/blob/master/LICENSE)d by him.)
+(the files under this directory are from [Brian Turek](https://github.com/Caligatio)'s [jsSHA](https://github.com/Caligatio/jsSHA), [licence](https://github.com/Caligatio/jsSHA/blob/master/LICENSE)d by him.)
 
 A pure JavaScript streaming implementation of the complete Secure Hash Standard
 family (SHA-1, SHA-224, SHA3-224, SHA-256, SHA3-256, SHA-384, SHA3-384, SHA-512,

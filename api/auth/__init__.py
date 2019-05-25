@@ -49,7 +49,7 @@ from . import update_email
 from . import update_avatar
 
 # database:
-DBUSER = "Noop!"
+DBUSER = "Nope!"
 DBPASSWORD = "Not here!"
 DBHOST = "db.whmhammer.com"
 DBNAME = "auth"
@@ -58,6 +58,7 @@ USERNAMEMAXLENGTH = 64
 SALTLENGTH = 16
 PASSWORDHASHLENGTH = 128
 EMAILMAXLENGTH = 64
+LINKMAXLENGTH = 512
 
 SESSIONEXPIRETIME = 86400   # 86400 seconds == 24 hours
 
@@ -113,6 +114,9 @@ def check_response(response):
 
 def check_email(email):
     return len(email) <= EMAILMAXLENGTH
+
+def check_link(link):
+    return len(link) <= LINKMAXLENGTH
 
 
 # hash

@@ -3,6 +3,7 @@ verification_code_input.style.display="none";
 email_input.style.display="none";
 
 document.getElementById("right").innerHTML = ' \
+    <h6><a href="register">Register</a></h6> \
     <h6><a href="get_username">forgot username?</a></h6> \
     <h6><a href="request_password">forgot password?</a></h6> \
 ';
