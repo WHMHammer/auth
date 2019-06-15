@@ -14,7 +14,7 @@
                     window.location.replace("/");
                 }
             };
-            rq.open("POST",`${api_domain}/auth/logout`,true);
+            rq.open("DELETE",`${api_domain}/auth/login`,true);
             rq.setRequestHeader("Content-Type","application/json");
             rq.send(JSON.stringify({
                 "user_token":user_token

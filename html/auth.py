@@ -15,8 +15,8 @@ def register():
         title="Register",
         button="register",
         scripts=(
-            "auth/js/jsSHA/sha.js",
-            "auth/js/register.js"
+            "lib/jsSHA/sha.js",
+            "auth/register.js"
         ),
     )
 
@@ -28,8 +28,8 @@ def verify():
         title="Verify",
         button="verify",
         scripts=(
-            "auth/js/jsSHA/sha.js",
-            "auth/js/verify.js"
+            "lib/jsSHA/sha.js",
+            "auth/verify.js"
         )
     )
 
@@ -41,8 +41,8 @@ def login():
         title="Login",
         button="login",
         scripts=(
-            "auth/js/jsSHA/sha.js",
-            "auth/js/login.js"
+            "lib/jsSHA/sha.js",
+            "auth/login.js"
         )
     )
 
@@ -53,7 +53,7 @@ def get_username():
         "auth/form.html",
         title="Get username",
         button="get",
-        scripts=("auth/js/get_username.js",)
+        scripts=("auth/get_username.js",)
     )
 
 
@@ -63,7 +63,7 @@ def request_password():
         "auth/form.html",
         title="Request password reset",
         button="request",
-        scripts=("auth/js/request_password.js",)
+        scripts=("auth/request_password.js",)
     )
 
 
@@ -73,7 +73,7 @@ def reset_password():
         "auth/form.html",
         title="Reset password",
         button="reset",
-        scripts=("auth/js/reset_password.js",)
+        scripts=("auth/reset_password.js",)
     )
 
 
@@ -85,3 +85,8 @@ def logout():
 @bp.route("/profile", methods=("GET",))
 def profile():
     return flask.render_template("auth/profile.html")
+
+
+@bp.route("/edit_profile", methods=("GET",))
+def edit_profile():
+    return flask.render_template("auth/edit_profile.html")

@@ -22,12 +22,12 @@ def index():
                 <p>But in the corner, leaning against the wall, sat the little girl with red cheeks and smiling mouth, frozen to death on the last evening of the old year. The New Year's sun rose upon a little pathetic figure. The child sat there, stiff and cold, holding the matches, of which one bundle was almost burned.</p>
                 <p>"She wanted to warm herself," the people said. No one imagined what beautiful things she had seen, and how happily she had gone with her old grandmother into the bright New Year.</p>
         """,
-        scripts=("js/index.js",)
+        scripts=("index.js",)
     )
 
 # register blueprint(s)
-import auth
-app.register_blueprint(auth.bp)
+from auth import bp as auth_bp
+app.register_blueprint(auth_bp)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80)

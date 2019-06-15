@@ -6,10 +6,6 @@ This project aims to provide a secure web based authentication system.
 
 Planned:
 
-- Update password after login
-
-- Delete account
-
 - Documentation
   
 Please create an issue if you feel that new features need to be added.
@@ -57,10 +53,4 @@ Read [flask](https://github.com/pallets/flask)'s [official document on deploymen
 
 Special thanks to [Staph. aureus](https://github.com/StephDC) for leading me the way to web development, and being a real good friend in my life. I wouldn't be able to accompllish this without your guidance.
 
-### [Bootstrap](https://github.com/twbs) - [bootstrap](https://github.com/twbs/bootstrap)
-
 ### [Brian Turek](https://github.com/Caligatio) - [jsSHA](https://github.com/Caligatio/jsSHA)
-
-### [Feather](https://github.com/feathericons) - [feather](https://github.com/feathericons/feather)
-
-### [The Pallets Projects](https://github.com/pallets) - [flask](https://github.com/pallets/flask)

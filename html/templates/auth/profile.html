@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block style %}
-    <link rel="stylesheet" href="{{ url_for('static' ,filename='auth/css/profile.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static' ,filename='css/auth/profile.css') }}">
 {% endblock %}
 
 {% block title %}
@@ -11,6 +11,7 @@
 {% block content %}
     <h1 id="username"></h1>
     <h6 id="email"></h>
+    <a group="btn btn-primary" href="/auth/edit_profile">Edit Profile</a>
 {% endblock %}
 
 {% block right %}
@@ -19,5 +20,5 @@
 
 {% block script %}
     <script src="{{ url_for('static', filename='js/info.js') }}"></script>
-    <script src="{{ url_for('static', filename='auth/js/profile.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/auth/profile.js') }}"></script>
 {% endblock %}
