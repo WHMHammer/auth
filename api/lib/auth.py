@@ -1,4 +1,3 @@
-import flask
 from hashlib import sha3_512
 from time import time
 
@@ -49,8 +48,7 @@ def hash(*args):
 
 # user token
 def generate_user_token(username):
-    conn = connect_db()
-    cur = conn.cursor()
+    cur = flask.g.db.cursor()
 
     cur.execute("""
         SELECT id, email, avatar
@@ -67,8 +65,8 @@ def generate_user_token(username):
         VALUES(%s,%s,%s);
     """, (user_id, session, int(time())+session_expire_time))
 
-    conn.commit()
-    conn.close()
+    flask.g.db.commit()
+    
 
     return {
         "user_id": user_id,
@@ -79,8 +77,7 @@ def generate_user_token(username):
     }
 
 
-def check_user_token():
-    user_token = flask.request.get_json().get("user_token")
+def get_user_token(user_token):
     try:
         user_id = int(user_token["user_id"])
         session = str(user_token["session"])
@@ -98,8 +95,6 @@ def check_user_token():
         WHERE expire_time < %s;
     """, (int(time()),))
 
-    conn.commit()
-
     cur.execute("""
         SELECT users.username, users.email, users.role
         FROM users RIGHT JOIN sessions
@@ -112,6 +107,9 @@ def check_user_token():
         username, email, role = cur.fetchone()
     except TypeError:
         return None
+
+    conn.commit()
+    conn.close()
 
     return {
         "id": user_id,

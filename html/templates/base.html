@@ -9,6 +9,9 @@
         {% for css in stylesheets %}
             <link rel="stylesheet" href="{{ url_for('static', filename='css/'+css) }}">
         {% endfor %}
+        {% for css in ex_stylesheets %}
+            <link rel="stylesheet" href="{{ css }}">
+        {% endfor %}
         <title>
             {% block title %}
                 {{ title }}
@@ -44,6 +47,9 @@
         {% block script %}{% endblock %}
         {% for js in scripts %}
             <script src="{{ url_for('static', filename='js/'+js) }}"></script>
+        {% endfor %}
+        {% for js in ex_scripts %}
+            <script src="{{ js }}"></script>
         {% endfor %}
     </body>
 </html>

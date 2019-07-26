@@ -1,13 +1,13 @@
 # project
-project_name = "Auth"
+project_name = "Watermelon"
 domain = ""
-developer_email = "whmhammer@gmail.com"
+secret_key = ""
 
 # database
 db_user = ""
 db_password = ""
 db_host = ""
-db_name = "auth"
+db_name = "watermelon"
 
 # email
 noreply = {

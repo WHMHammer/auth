@@ -15,9 +15,11 @@ def register():
         title="Register",
         button="register",
         scripts=(
-            "lib/jsSHA/sha.js",
-            "auth/register.js"
+            "auth/register.js",
         ),
+        ex_scripts=(
+            "https://caligatio.github.io/jsSHA/sha.js",
+        )
     )
 
 
@@ -28,8 +30,10 @@ def verify():
         title="Verify",
         button="verify",
         scripts=(
-            "lib/jsSHA/sha.js",
-            "auth/verify.js"
+            "auth/verify.js",
+        ),
+        ex_scripts=(
+            "https://caligatio.github.io/jsSHA/sha.js",
         )
     )
 
@@ -41,8 +45,10 @@ def login():
         title="Login",
         button="login",
         scripts=(
-            "lib/jsSHA/sha.js",
-            "auth/login.js"
+            "auth/login.js",
+        ),
+        ex_scripts=(
+            "https://caligatio.github.io/jsSHA/sha.js",
         )
     )
 
@@ -53,7 +59,9 @@ def get_username():
         "auth/form.html",
         title="Get username",
         button="get",
-        scripts=("auth/get_username.js",)
+        scripts=(
+            "auth/get_username.js",
+        )
     )
 
 
@@ -63,7 +71,9 @@ def request_password():
         "auth/form.html",
         title="Request password reset",
         button="request",
-        scripts=("auth/request_password.js",)
+        scripts=(
+            "auth/request_password.js",
+        )
     )
 
 
@@ -73,7 +83,9 @@ def reset_password():
         "auth/form.html",
         title="Reset password",
         button="reset",
-        scripts=("auth/reset_password.js",)
+        scripts=(
+            "auth/reset_password.js",
+        )
     )
 
 

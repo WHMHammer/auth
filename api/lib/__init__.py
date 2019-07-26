@@ -1,3 +1,4 @@
+import flask
 import mysql.connector as sql
 import smtplib
 from random import choice
@@ -5,7 +6,6 @@ from random import choice
 from info import *
 
 
-# database
 def connect_db():
     return sql.connect(
         user=db_user,

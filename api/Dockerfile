@@ -1,12 +1,13 @@
-FROM python:alpine
+FROM python
 
 WORKDIR /app
 
 EXPOSE 80
 
-RUN pip3 install blinker simplejson python-dotenv watchdog flask
+RUN pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip3 install uwsgi blinker simplejson python-dotenv watchdog flask
 RUN pip3 install mysql-connector-python
 
 COPY . /app
 
-CMD ["python3", "__init__.py"]
+CMD uwsgi --http :80 --master --wsgi-file __init__.py --callable app
