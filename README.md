@@ -1,4 +1,4 @@
-# Auth
+# Auth (challenge-response)
 
 This project aims to provide a secure web based authentication system.
 
